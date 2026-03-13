@@ -18,8 +18,9 @@ public:
 
 	void Init();
 	void InitTexture();
+	void InitColor();
 	void InitColorTexture();
-	void Draw();
+	void Draw(int nbVertices);
 
 
 	~Triangle();

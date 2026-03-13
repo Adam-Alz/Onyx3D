@@ -10,6 +10,7 @@ public:
 
 	void Init();
 	void InitTexture();
+	void InitColorTexture();
 	void Draw();
 	
 

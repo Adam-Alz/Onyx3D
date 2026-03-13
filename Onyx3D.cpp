@@ -60,13 +60,13 @@ int main()
 	Shader textureShader("textureShader.vert", "textureFragShader.frag");
 
 
-	float topTriangle[] = {
+	std::vector<float> topTriangle = {
 		0.0f, 0.99f, 0.0f,	1.0f, 0.0f, 0.0,// TOP
 		-0.5f, 0.0f, 0.0f,	0.0f, 1.0f, 0.0f,// LEFT  // HAUT
 		0.5f, 0.0f, 0.0f,	0.0f, 0.0f, 1.0f,// RIGHT
 	};
-	
-	float bottomTriangle[] = {
+
+	std::vector<float> bottomTriangle = {
 		-0.5f, 0.0f, 0.0f,
 		-1.0f, -0.99f, 0.0f, // GAUCHE
 		0.0f, -0.99f, 0.0f,
@@ -84,8 +84,7 @@ int main()
 	};
 
 
-	float texturedSquare[] =
-	{
+	std::vector<float> texturedSquare = {
 		-1.0f, 1.0f, 0.0f, /* HAUT GAUCHE */	1.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 		-0.50f, 1.0f, 0.0f, /* HAUT DROITE */	0.0f, 1.0f, 0.0f,	1.0f, 1.0f,
 	    -1.0f, 0.25f, 0.0f, /* BAS GAUCHE */	0.0f, 0.0f, 1.0f,	0.0f, 0.0f,
@@ -93,15 +92,12 @@ int main()
 
 	};
 
-	unsigned int texturedSquareIndice[] =
+	std::vector<unsigned int> texturedSquareIndice =
 	{
 		0, 1, 2,
 		1, 2, 3
 	};
 
-	//-0.79f, 0.9f, 0.0f,
-	//-0.95f, 0.5f, 0.0f, // GAUCHE
-	//-0.6f, 0.5f, 0.0f,
 
 	std::vector<float> triangleTestClass = {
 		1.0f, 1.0f, 0.0f,	0.5f, 1.0f,
@@ -147,34 +143,21 @@ int main()
 
 
 
-	unsigned int VBO, VAO, EBO, VBO1, VAO1, TexturedSquareVBO, TexturedSquareVAO, TexturedTriangleVBO, TexturedTriangleVAO;
-	glGenVertexArrays(1, &VAO);
+	unsigned int VBO1, VAO1;
 	glGenVertexArrays(1, &VAO1);
-	glGenVertexArrays(1, &TexturedSquareVAO);
-	glGenVertexArrays(1, &TexturedTriangleVAO);
-
 
 	
-	
-	
-
-	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &VBO1);
-	glGenBuffers(1, &TexturedSquareVBO);
-	glGenBuffers(1, &EBO);
-	glGenBuffers(1, &TexturedTriangleVBO);
 
 
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(bottomTriangle), bottomTriangle, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	
+	Triangle bottomTriangleClass(bottomTriangle, shader);
+	bottomTriangleClass.Init();
 
 
+	Triangle topTriangleClass(topTriangle, shader1);
+	topTriangleClass.InitColor();
 
+	/*
 	glBindVertexArray(VAO1);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(topTriangle), topTriangle, GL_STATIC_DRAW);
@@ -186,81 +169,23 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	*/
 
-
-
-	glBindVertexArray(TexturedSquareVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, TexturedSquareVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texturedSquare), texturedSquare, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(texturedSquareIndice), texturedSquareIndice, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int width, height, nrChannels;
-	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("ressources/Textures/wall.jpg", &width, &height, &nrChannels, 0);
 	
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
 
 	
 
 	//float border_color[] = { 1.0f, 0.0f, 0.0f };
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
 
-
+	
 
 	Triangle texturedTriangle(texturedTriangleVertices, textureShader);
 	texturedTriangle.InitColorTexture();
-	texturedTriangle.SetTexture("ressources/Textures/chokbar.jpg");
+	texturedTriangle.SetTexture("ressources/Textures/wall.jpg");
 	
 	
 
-
-	unsigned int texture1;
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	data = stbi_load("ressources/Textures/awesomeface.png", &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
 
 	//float border_color[] = { 1.0f, 0.0f, 0.0f };
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
@@ -270,10 +195,13 @@ int main()
 	testTriangle.InitTexture();
 	testTriangle.SetTexture("ressources/Textures/wall.jpg");
 
-	Square testSquare(SquareTestClass, indicesSquareTestClass, simpleShader);
+	Square testSquare(texturedSquare, texturedSquareIndice, shader);
 	//testSquare.Init();
-	testSquare.InitTexture();
-	testSquare.SetTexture("ressources/Textures/container.jpg");
+	testSquare.InitColorTexture();
+	testSquare.BindTexture(0);
+	testSquare.SetTexture("ressources/Textures/chokbar.jpg");
+	testSquare.BindTexture(1);
+	testSquare.SetTexture("ressources/Textures/hacker.jpg");
 	//testTriangle.SetTexture("ressources/Textures/awesomeface.jpg");
 
 	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -304,6 +232,8 @@ int main()
 	shader1.setInt("texture", 0);
 	shader1.setInt("texture2", 1);
 
+	
+
 	// Render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -331,32 +261,15 @@ int main()
 		shader.setFloat("yOffset", yOffset);
 		//glUniform4f(vertexColorLocation, 0.5f, greenValue, 0.0f, 1.0f);
 
-
-		glBindVertexArray(VAO); // Methode affichage 1 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
+		bottomTriangleClass.Draw(6);;
 		
-		textureShader.use();
-		//textureShader.setInt("texture1", 0);
-		testSquare.BindTexture(0);
-		//simpleShader.setBool("useTransform", true);
-		//simpleShader.setTrans("transform", testSquare.trans);
-		//testSquare.SetColor("color", 255, 0, 0, 0);
-		testSquare.Draw();
 
 		//shader.setBool("useTransform", false);
 		//testTriangle.SetColor("ourColor", 114.0f, 35.f, 217.0f, 255.0f);
 		textureShader.use();
 		testTriangle.BindTexture(0);
 		//testTriangle.SetColor("color", 0, 255, 0, 0);
-		testTriangle.Draw();
-
-		//shader.setFloat4("ourColor", 1.0f, greenValue, 0.2f, 1.0f);
-
-		
-
-		//glBindVertexArray(VAO1); // Methode affichage 2
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		testTriangle.Draw(3);
 
 		
 
@@ -366,37 +279,27 @@ int main()
 		//glUniformMatrix4fv(transoformLoc1, 1, GL_FALSE, glm::value_ptr(trans));
 
 		shader1.setBool("useTexture", false);
-		glBindVertexArray(VAO1);
-		glDrawArrays(GL_TRIANGLES, 0, 3); //Methode affichage 1
-		//glDrawArrays(GL_TRIANGLES, 2, 3);
-
+		topTriangleClass.Draw(3);
 
 
 		shader1.use();
 		shader1.setBool("useTexture", true);
 		shader1.setBool("mixTexture", true);
 		shader1.setFloat("mixValue", mixValue);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		
 
-		glBindVertexArray(TexturedSquareVAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE1);
+		testSquare.Draw();
+
 
 		shader1.use();
 		shader1.setBool("useTexture", true);
 		shader1.setBool("mixTexture", false);
-		//glBindTexture(GL_TEXTURE_2D, texture1);
-		//glBindVertexArray(TexturedTriangleVAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
 		
-		texturedTriangle.BindTexture(0);
-		texturedTriangle.Draw();
+		
 
-		//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(6*sizeof(unsigned int))); // Methode affichage 2
+		texturedTriangle.BindTexture(0);
+		texturedTriangle.Draw(3);
 
 
 		glBindVertexArray(0);
@@ -408,13 +311,8 @@ int main()
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
 	testTriangle.~Triangle();
 	testSquare.~Square();
-	//glDeleteProgram(shaderProgram);
-	//glDeleteProgram(shaderProgram1);
 	glfwTerminate();
 	return 0;
 }
