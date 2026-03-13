@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GLSL">
+      <UniqueIdentifier>{d2f6f1c4-b2bc-46be-bb87-74a710e442ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fragment">
+      <UniqueIdentifier>{fe525057-7d7c-49f2-8e69-e3ec2ddeb99a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{86097ebd-208a-4537-a5a2-3fff99684cd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh\Shape">
+      <UniqueIdentifier>{97458957-a362-478c-915c-5b1682d30e0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh\Shape\Triangle">
+      <UniqueIdentifier>{ae121496-dc45-4485-b3e7-282cbf7dac47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh\Shape\Square">
+      <UniqueIdentifier>{9931bd4a-2dd2-4446-91b6-786a1d4ee07e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Onyx3D.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\glad\src\glad.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Mesh\Shape\Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Square.cpp">
+      <Filter>Mesh\Shape\Square</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\glad\include\glad\glad.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Mesh\Shape\Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Square.h">
+      <Filter>Mesh\Shape\Square</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vertexShader.vert">
+      <Filter>GLSL</Filter>
+    </None>
+    <None Include="simpleShader.vert">
+      <Filter>GLSL</Filter>
+    </None>
+    <None Include="fragmentShader.frag">
+      <Filter>Fragment</Filter>
+    </None>
+    <None Include="fragmentShader1.frag">
+      <Filter>Fragment</Filter>
+    </None>
+    <None Include="simpleFragShader.frag">
+      <Filter>Fragment</Filter>
+    </None>
+    <None Include="textureShader.vert">
+      <Filter>GLSL</Filter>
+    </None>
+    <None Include="textureFragShader.frag">
+      <Filter>Fragment</Filter>
+    </None>
+  </ItemGroup>
+</Project>
