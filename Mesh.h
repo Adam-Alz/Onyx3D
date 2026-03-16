@@ -20,8 +20,8 @@ public:
 	void Rotate(float degres, float x, float y, float z);
 	void Scale(float x, float y, float z);
 	void SetColor(std::string uniform, float r, float g, float b, float a);
-	void SetTexture(const char* filePath);
-	void BindTexture(unsigned int slot);
+	//void SetTexture(unsigned int texture, const char* filePath);
+	//void BindTexture(unsigned int texture, unsigned int slot);
 
 	float normalize(float v)
 	{
@@ -33,7 +33,7 @@ public:
 protected:
 	unsigned int VAO, VBO;
 	std::vector<float> vertices;
-	unsigned int texture;
+	//unsigned int texture;
 	Shader shader;
 };
 

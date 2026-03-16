@@ -5,6 +5,7 @@ Triangle::Triangle(std::vector<float>vertices, Shader shader) : Mesh(vertices, s
 Triangle::~Triangle()
 {
 	glDeleteBuffers(1, &this->VBO);
+	glDeleteVertexArrays(1, &this->VAO);
 }
 
 void Triangle::Init()

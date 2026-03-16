@@ -7,6 +7,7 @@ Square::~Square()
 {
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);
 }
 
 void Square::Init()

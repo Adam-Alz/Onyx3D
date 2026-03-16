@@ -10,6 +10,7 @@
 #include <array>
 #include "Triangle.h"
 #include "Square.h"
+#include "Texture.h"
 
 // Test Git
 
@@ -61,9 +62,9 @@ int main()
 
 
 	std::vector<float> topTriangle = {
-		0.0f, 0.99f, 0.0f,	1.0f, 0.0f, 0.0,// TOP
-		-0.5f, 0.0f, 0.0f,	0.0f, 1.0f, 0.0f,// LEFT  // HAUT
-		0.5f, 0.0f, 0.0f,	0.0f, 0.0f, 1.0f,// RIGHT
+		0.0f, 0.99f, 0.0f,	/*1.0f, 0.0f, 0.0,*/	0.5f, 1.0f,// TOP
+		-0.5f, 0.0f, 0.0f,	/*0.0f, 1.0f, 0.0f,*/	0.0f, 0.0f,// LEFT  // HAUT
+		0.5f, 0.0f, 0.0f,	/*0.0f, 0.0f, 1.0f,*/	1.0f, 0.0f// RIGHT
 	};
 
 	std::vector<float> bottomTriangle = {
@@ -140,72 +141,30 @@ int main()
 	};
 
 
-
-
-
-	unsigned int VBO1, VAO1;
-	glGenVertexArrays(1, &VAO1);
-
-	
-	glGenBuffers(1, &VBO1);
-
-
 	Triangle bottomTriangleClass(bottomTriangle, shader);
 	bottomTriangleClass.Init();
 
 
+	Texture obamaTexture("ressources/Textures/obama2.jpg");
 	Triangle topTriangleClass(topTriangle, shader1);
-	topTriangleClass.InitColor();
+	topTriangleClass.InitTexture();
 
-	/*
-	glBindVertexArray(VAO1);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(topTriangle), topTriangle, GL_STATIC_DRAW);
 
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(triforceIndices), triforceIndices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	*/
-
-	
-
-	
-
-	//float border_color[] = { 1.0f, 0.0f, 0.0f };
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
-
-	
-
+	Texture textureTriangleTexture("ressources/Textures/container.jpg");
 	Triangle texturedTriangle(texturedTriangleVertices, textureShader);
 	texturedTriangle.InitColorTexture();
-	texturedTriangle.SetTexture("ressources/Textures/wall.jpg");
-	
 	
 
-
-	//float border_color[] = { 1.0f, 0.0f, 0.0f };
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
-
-
+	Texture textureTriangle("ressources/Textures/wall.jpg");
 	Triangle testTriangle(triangleTestClass, textureShader);
 	testTriangle.InitTexture();
-	testTriangle.SetTexture("ressources/Textures/wall.jpg");
 
+
+	Texture texture("ressources/Textures/milesMorales.jpg");
+	Texture texture1("ressources/Textures/hacker.jpg");
 	Square testSquare(texturedSquare, texturedSquareIndice, shader);
-	//testSquare.Init();
 	testSquare.InitColorTexture();
-	testSquare.BindTexture(0);
-	testSquare.SetTexture("ressources/Textures/chokbar.jpg");
-	testSquare.BindTexture(1);
-	testSquare.SetTexture("ressources/Textures/hacker.jpg");
-	//testTriangle.SetTexture("ressources/Textures/awesomeface.jpg");
 
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -267,8 +226,10 @@ int main()
 		//shader.setBool("useTransform", false);
 		//testTriangle.SetColor("ourColor", 114.0f, 35.f, 217.0f, 255.0f);
 		textureShader.use();
-		testTriangle.BindTexture(0);
+		//testTriangle.BindTexture(testTriangleTexture, 0);
 		//testTriangle.SetColor("color", 0, 255, 0, 0);
+		//textureTriangle.ActiveAndBind(0, testTriangleTexture);
+		textureTriangle.ActiveAndBind(0, textureTriangle.ID);
 		testTriangle.Draw(3);
 
 		
@@ -278,7 +239,10 @@ int main()
 		unsigned int transoformLoc1 = glGetUniformLocation(shader1.ID, "transform");
 		//glUniformMatrix4fv(transoformLoc1, 1, GL_FALSE, glm::value_ptr(trans));
 
-		shader1.setBool("useTexture", false);
+		//shader1.setBool("useTexture", true);
+		textureShader.use();
+		//obamaTexture.ActiveAndBind(0, obamaTex);
+		obamaTexture.ActiveAndBind(0, obamaTexture.ID);
 		topTriangleClass.Draw(3);
 
 
@@ -287,8 +251,12 @@ int main()
 		shader1.setBool("mixTexture", true);
 		shader1.setFloat("mixValue", mixValue);
 
-		glActiveTexture(GL_TEXTURE0);
-		glActiveTexture(GL_TEXTURE1);
+		//testSquare.BindTexture(testSquareTexture, 0);
+		//testSquare.BindTexture(testSquareTexture1, 1);
+		//texture.ActiveAndBind(0, testSquareTexture);
+		//texture.ActiveAndBind(1, testSquareTexture1);
+		texture.ActiveAndBind(0, texture.ID);
+		texture1.ActiveAndBind(1, texture1.ID);
 		testSquare.Draw();
 
 
@@ -297,8 +265,9 @@ int main()
 		shader1.setBool("mixTexture", false);
 		
 		
-
-		texturedTriangle.BindTexture(0);
+		//textureTriangleTexture.ActiveAndBind(0, texturedTriangleM);
+		textureTriangleTexture.ActiveAndBind(0, textureTriangleTexture.ID);
+		//texturedTriangle.BindTexture(texturedTriangleTexture, 0);
 		texturedTriangle.Draw(3);
 
 

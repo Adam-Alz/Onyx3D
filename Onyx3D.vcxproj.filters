@@ -48,6 +48,9 @@
     <ClCompile Include="Square.cpp">
       <Filter>Mesh\Shape\Square</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="Square.h">
       <Filter>Mesh\Shape\Square</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

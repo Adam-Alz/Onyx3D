@@ -24,13 +24,14 @@ void Mesh::SetColor(std::string uniform, float r, float g, float b, float a)
 	shader.setFloat4(uniform.c_str(), normalize(r), normalize(g), normalize(b), normalize(a));
 }
 
-void Mesh::BindTexture(unsigned int slot)
+/*
+void Mesh::BindTexture(unsigned int texture, unsigned int slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void Mesh::SetTexture(const char* filePath)
+void Mesh::SetTexture(unsigned int texture, const char* filePath)
 {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -55,3 +56,4 @@ void Mesh::SetTexture(const char* filePath)
 	}
 	stbi_image_free(data);
 }
+*/
