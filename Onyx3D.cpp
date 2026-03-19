@@ -13,7 +13,7 @@
 #include "Texture.h"
 
 // Test Git
-
+#define M_PI 3.1415926535897932384626433832795
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -139,6 +139,60 @@ int main()
 		3, 4, 2,
 		5, 0, 3
 	};
+
+
+	std::vector<float> squarePreuve = {
+		0.75f, 0.25f, 0.0f,		0.0f, 1.0f,
+		1.0f, 0.25f, 0.0f,		1.0f, 1.0f,
+		0.75f, -0.25f, 0.0f,	0.0f, 0.0f,
+		1.0f, -0.25f, 0.0f,		1.0f, 0.0f
+	};
+
+	std::vector<unsigned int> indiceSquarePreuve = {
+		0, 1, 2,
+		1, 2, 3
+
+	};
+
+
+	int segments = 50;
+	float radius = 0.2f;
+	
+
+	std::vector<float> circle;
+
+	circle.push_back(0.0f);
+	circle.push_back(0.0f);
+	circle.push_back(0.0f);
+
+	for (int i = 0; i <= segments; i++)
+	{
+		float angle = 2.0f * M_PI * i / segments;
+		
+		float x = radius * cos(angle);
+		float y = radius * sin(angle);
+
+		circle.push_back(x);
+		circle.push_back(y);
+		circle.push_back(0.0f);
+	}
+
+	unsigned int VAO, VBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, circle.size() * sizeof(float), circle.data(), GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+
+	Texture testTex("ressources/Textures/hacker.jpg");
+	Square preuvreSquare(squarePreuve, indiceSquarePreuve, shader);
+	preuvreSquare.InitTexture();
+	
 
 
 	Triangle bottomTriangleClass(bottomTriangle, shader);
@@ -271,9 +325,18 @@ int main()
 		texturedTriangle.Draw(3);
 
 
+		textureShader.use();
+		texture1.ActiveAndBind(0, texture1.ID);
+		preuvreSquare.Draw();
+
+
 		glBindVertexArray(0);
 
-
+		glBindVertexArray(VAO);
+		simpleShader.use();
+		
+		simpleShader.setFloat4("color", 1.0f, 0.0f, 0.0f, 1.0f);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, segments + 2);
 
 		// Check and call events and swap the buffers
 		glfwSwapBuffers(window);
