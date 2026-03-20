@@ -11,13 +11,16 @@
 #include "Triangle.h"
 #include "Square.h"
 #include "Texture.h"
+#include "Circle.h"
 
 // Test Git
-#define M_PI 3.1415926535897932384626433832795
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include "Shader.h"
+
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -34,7 +37,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Onyx3D", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Onyx3D", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -142,10 +145,10 @@ int main()
 
 
 	std::vector<float> squarePreuve = {
-		0.75f, 0.25f, 0.0f,		0.0f, 1.0f,
-		1.0f, 0.25f, 0.0f,		1.0f, 1.0f,
-		0.75f, -0.25f, 0.0f,	0.0f, 0.0f,
-		1.0f, -0.25f, 0.0f,		1.0f, 0.0f
+		0.75f, 0.25f, 0.0f,		//0.0f, 1.0f,
+		1.0f, 0.25f, 0.0f,		//1.0f, 1.0f,
+		0.75f, -0.25f, 0.0f,	//0.0f, 0.0f,
+		1.0f, -0.25f, 0.0f,		//1.0f, 0.0f
 	};
 
 	std::vector<unsigned int> indiceSquarePreuve = {
@@ -155,43 +158,13 @@ int main()
 	};
 
 
-	int segments = 50;
-	float radius = 0.2f;
-	
-
-	std::vector<float> circle;
-
-	circle.push_back(0.0f);
-	circle.push_back(0.0f);
-	circle.push_back(0.0f);
-
-	for (int i = 0; i <= segments; i++)
-	{
-		float angle = 2.0f * M_PI * i / segments;
-		
-		float x = radius * cos(angle);
-		float y = radius * sin(angle);
-
-		circle.push_back(x);
-		circle.push_back(y);
-		circle.push_back(0.0f);
-	}
-
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, circle.size() * sizeof(float), circle.data(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	Circle circle(simpleShader, 50, 0.2f);
+	circle.Init();
 
 
 	Texture testTex("ressources/Textures/hacker.jpg");
 	Square preuvreSquare(squarePreuve, indiceSquarePreuve, shader);
-	preuvreSquare.InitTexture();
+	preuvreSquare.Init();
 	
 
 
@@ -240,6 +213,7 @@ int main()
 	//testTriangle.Translate(0.5, 0.0, 0.0);
 	
 	//testSquare.Translate(0.2f, 0.5f, 0.0f);
+
 
 	shader1.use();
 	shader1.setInt("texture", 0);
@@ -325,18 +299,47 @@ int main()
 		texturedTriangle.Draw(3);
 
 
-		textureShader.use();
-		texture1.ActiveAndBind(0, texture1.ID);
+		
+
+		simpleShader.use();
+
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection = glm::mat4(1.0f);
+
+		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+		unsigned int modelLoc = glGetUniformLocation(simpleShader.ID, "model");
+		unsigned int viewLoc = glGetUniformLocation(simpleShader.ID, "view");
+		unsigned int projectionloc = glGetUniformLocation(simpleShader.ID, "projection");
+
+		// pass them to the shaders (3 different ways)
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		glUniformMatrix4fv(projectionloc, 1, GL_FALSE, glm::value_ptr(projection));
+
+		
+
+		simpleShader.setBool("transform", true);
+		preuvreSquare.SetColor("color", 255.0f, 0.0f, 0.0f, 255.0f);
+
 		preuvreSquare.Draw();
 
 
 		glBindVertexArray(0);
 
-		glBindVertexArray(VAO);
-		simpleShader.use();
+
+
 		
-		simpleShader.setFloat4("color", 1.0f, 0.0f, 0.0f, 1.0f);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, segments + 2);
+
+		simpleShader.use();
+		simpleShader.setBool("transform", true);
+		simpleShader.setTrans("model", model);
+		simpleShader.setTrans("view", view);
+		simpleShader.setTrans("projection", projection);
+		circle.Draw();
 
 		// Check and call events and swap the buffers
 		glfwSwapBuffers(window);
