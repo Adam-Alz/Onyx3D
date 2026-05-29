@@ -13,15 +13,14 @@
 class Texture
 {
 public:
-	Texture(const char* path);
-
-	unsigned int Init(unsigned int ID, const char* path);
-	void ActiveAndBind(unsigned int slot, unsigned int ID);
+	Texture(const char* path, bool rgba = false);
+	void ActiveAndBind(unsigned int slot);
 
 	unsigned int ID;
-
+	int width, height;
 
 private:
 	const char* path;
+	void InitRGBA(const char* path);
 };
 

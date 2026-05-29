@@ -21,6 +21,7 @@ public:
 	void InitColor();
 	void InitColorTexture();
 	void Draw(int nbVertices);
+	void DrawPrism(int nbVertices);
 
 
 	~Triangle();

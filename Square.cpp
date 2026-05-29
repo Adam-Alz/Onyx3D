@@ -2,6 +2,7 @@
 
 
 Square::Square(std::vector<float> vertices, std::vector<unsigned int> indices, Shader shader) : Mesh(vertices, shader), indices(indices) {}
+Square::Square(std::vector<float> vertices, Shader shader) : Mesh(vertices, shader) {}
 
 Square::~Square()
 {
@@ -75,4 +76,10 @@ void Square::Draw()
 {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void Square::DrawCube()
+{
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
